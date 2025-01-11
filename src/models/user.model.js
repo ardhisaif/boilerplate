@@ -1,22 +1,49 @@
 import db from '../config/connection.js'
 
 export default {
-  async getUserByUserID(userID) {
+  async getUserByID(userID) {
     try {
       const query = `
-        SELECT * FROM auth WHERE user_id = ?
+        SELECT * FROM users WHERE id = ?
       `
-      const [data] = await db.query(query, [userID])
-  
-      const response = data[0]
-      response.device_id = response.deviceId
-      delete response.deviceId
-      response.device_os = response.deviceOS 
-      delete response.deviceOS
+      console.log(userID);
       
-      return response
+      const [data] = await db.query(query, [userID])
+      console.log(data);
+      
+      return data
     } catch (error) {
       throw error
     }
-  }
+  },
+
+  async getUserByUsername(username) {
+    try {
+      const query = `
+      SELECT id, username, password FROM users WHERE username = ?
+    `
+      const [data] = await db.query(query, [username])
+
+      return data[0]
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async registerUser({ username, password }) {
+    try {
+      const params = [username, password]
+      const query = `
+        INSERT INTO users (username, password)
+        VALUES (?, ?);
+      `
+      const [result] = await db.query(query, params)
+
+      return result.insertId
+    } catch (error) {
+      throw error
+    }
+  },
+
+  
 }
