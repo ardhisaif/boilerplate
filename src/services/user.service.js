@@ -22,6 +22,9 @@ export default {
       const isUserExist = await user.getUserByUsername(userData.username)
       errThrow(isUserExist, 400, 'User already exists!')
 
+      const isEmailExist = await user.getUserByEmail(userData.email)
+      errThrow(isEmailExist, 400, 'Email already exists!')
+
       const newUser = await user.registerUser(userData)
 
       return newUser
@@ -33,9 +36,9 @@ export default {
 
   async loginUser(credentials) {
     try {      
-      const foundUser = await user.getUserByUsername(credentials.username)
+      const foundUser = await user.getUserByEmail(credentials.email)
       if (!foundUser) {
-        errThrow(true, 400, 'Invalid username or password!')
+        errThrow(true, 400, 'Invalid email or password!')
       }
 
       const isMatch = await bcrypt.compare(credentials.password, foundUser.password)
@@ -44,8 +47,8 @@ export default {
         errThrow(true, 400, 'Invalid username or password!')
       }
 
-      const token = generateToken(foundUser.id, foundUser.username)
-      return { token, username: foundUser.username }
+      const token = generateToken(foundUser.id, foundUser.username, foundUser.email)
+      return { token, username: foundUser.username, email: foundUser.email, userId: foundUser.id }
     } catch (error) {
       throw error
     }

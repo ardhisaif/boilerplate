@@ -4,14 +4,12 @@ export default {
   async getUserByID(userID) {
     try {
       const query = `
-        SELECT * FROM users WHERE id = ?
+        SELECT id, username, email FROM users WHERE id = ?
       `
-      console.log(userID);
       
       const [data] = await db.query(query, [userID])
-      console.log(data);
       
-      return data
+      return data[0]
     } catch (error) {
       throw error
     }
@@ -20,7 +18,7 @@ export default {
   async getUserByUsername(username) {
     try {
       const query = `
-      SELECT id, username, password FROM users WHERE username = ?
+      SELECT id, username, email, password FROM users WHERE username = ?
     `
       const [data] = await db.query(query, [username])
 
@@ -30,12 +28,24 @@ export default {
     }
   },
 
-  async registerUser({ username, password }) {
+  async getUserByEmail(email) {
     try {
-      const params = [username, password]
       const query = `
-        INSERT INTO users (username, password)
-        VALUES (?, ?);
+      SELECT id, username, email, password FROM users WHERE email = ?
+    `
+      const [data] = await db.query(query, [email])
+      return data[0]
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async registerUser({ username, email, password }) {
+    try {
+      const params = [username, email, password]
+      const query = `
+        INSERT INTO users (username, email, password)
+        VALUES (?, ?, ?);
       `
       const [result] = await db.query(query, params)
 

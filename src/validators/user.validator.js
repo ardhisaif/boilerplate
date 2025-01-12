@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { zodString } from '../helpers/zod.message.js'
+import { email, zodString } from '../helpers/zod.message.js'
 
 export default {
   userID : z.object({
@@ -8,11 +8,12 @@ export default {
 
   registerUser: z.object({
     username: zodString('username'),
+    email: email('email'),
     password: zodString('password'),
   }),
 
   loginUser: z.object({
-    username: zodString('username'),
+    email: email('email'),
     password: zodString('password')
   }),
   

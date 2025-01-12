@@ -25,7 +25,7 @@ export default {
     try {
       const token = req.headers['auth_security']
 
-      errThrow(!token, 401, 'Anda tidak memiliki hak akses, Silahkan login kembali')
+      errThrow(!token, 401, 'Anda tidak memiliki hak akses, Silahkan login kembali')      
 
       const dataToken = verifyToken(token)
 
@@ -33,6 +33,8 @@ export default {
 
       return next()
     } catch (error) {
+      console.log(error);
+      
       return errResponse(error, res, 'jwt')
     }
   },
