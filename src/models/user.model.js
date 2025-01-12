@@ -55,5 +55,32 @@ export default {
     }
   },
 
+  async updateUser({ id, username, password, email }) {
+    try {
+      const updates = {}
+      if (username) updates.username = username
+      if (password) updates.password = password
+      if (email) updates.email = email
+
+      const fields = Object.keys(updates)
+      if (fields.length === 0) {
+        throw new Error('Tidak ada field yang diberikan untuk diupdate')
+      }
+
+      const setClause = fields.map((field) => `${field} = ?`).join(', ')
+      const values = [...Object.values(updates), id]
+      const query = `
+        UPDATE users
+        SET ${setClause}
+        WHERE id = ?
+      `
+
+      await db.query(query, values)
+      const data = await this.getUserByID(id)
+      return data
+    } catch (error) {
+      throw error
+    }
+  },
   
 }

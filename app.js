@@ -11,7 +11,7 @@ const url = process.env.URL || ''
 app.use(cors({
   origin: 'http://localhost:3000', // URL frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Metode yang diizinkan
-  allowedHeaders: ['Content-Type', 'Authorization'], // Header yang diizinkan
+  allowedHeaders: ['Content-Type', 'Authorization', 'auth_security'], // Header yang diizinkan
 }));
 
 app.use(bodyParser.json())

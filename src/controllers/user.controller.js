@@ -5,7 +5,7 @@ import validate from '../validators/user.validator.js'
 export default {
   async getUserByID(req, res) {
     try {
-      const { user_id } = validate.userID.parse(req.params)
+      const { user_id } = validate.userID.parse({user_id: req.user.user_id})
       const data = await user.getUserByID(user_id)      
       return okResponse(res, 'success!', data)
     } catch (error) {
@@ -30,6 +30,17 @@ export default {
       return okResponse(res, 'Login successful!', token)
     } catch (error) {
       return errResponse(error, res, 'loginUserController')
+    }
+  },
+
+  async updateUser(req, res) {
+    try {
+      const { user_id } = validate.userID.parse({user_id: req.user.user_id})
+      const updateData = validate.updateUser.parse(req.body)
+      const updatedUser = await user.updateUser(user_id, updateData)
+      return okResponse(res, 'User updated successfully!', updatedUser)
+    } catch (error) {
+      return errResponse(error, res, 'updateUserController')
     }
   },
 }

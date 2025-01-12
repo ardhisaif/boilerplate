@@ -33,7 +33,6 @@ export default {
     }
   },
 
-
   async loginUser(credentials) {
     try {      
       const foundUser = await user.getUserByEmail(credentials.email)
@@ -49,6 +48,19 @@ export default {
 
       const token = generateToken(foundUser.id, foundUser.username, foundUser.email)
       return { token, username: foundUser.username, email: foundUser.email, userId: foundUser.id }
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async updateUser(userID, updateData) {
+    try {
+      if (updateData.password) {
+        const salt = await bcrypt.genSalt(10)
+        updateData.password = await bcrypt.hash(updateData.password, salt)
+      }
+      const updatedUser = await user.updateUser({ id: userID, ...updateData })
+      return updatedUser
     } catch (error) {
       throw error
     }
